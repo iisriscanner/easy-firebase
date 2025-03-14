@@ -1,6 +1,6 @@
 import { Firestore } from "firebase-admin/firestore";
-import Collection from "./collection.ts";
-import Document from "./document.ts";
+import Collection from "./collection";
+import Document from "./document";
 
 class EasyFirebase {
   readonly collection: Collection;
