@@ -1,0 +1,20 @@
+{
+  "name": "easy-firebase",
+  "version": "0.0.0",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun run tsc"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/lodash": "^4.17.16"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.2.0",
+    "lodash": "^4.17.21"
+  }
+}
