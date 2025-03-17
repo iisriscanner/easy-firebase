@@ -1,6 +1,10 @@
 declare class Document {
     private db;
     constructor(db: FirebaseFirestore.Firestore);
+    set(path: string, data: object): Promise<{
+        error: Error | null;
+        data: object | null | undefined;
+    }>;
     add(path: string, data: object): Promise<{
         error: Error | null;
         data: object | null | undefined;
