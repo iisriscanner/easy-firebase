@@ -5,6 +5,22 @@ class Document {
     constructor(db) {
         this.db = db;
     }
+    async set(path, data) {
+        try {
+            const reference = this.db.doc(path);
+            const storedData = (await reference.get()).data();
+            if (!storedData)
+                throw new Error("Document value is undefined.");
+            await reference.update(data);
+            return { error: null, data };
+        }
+        catch (err) {
+            if (err instanceof Error) {
+                return { error: { name: err.name, message: err.message }, data: null };
+            }
+            return { error: new Error("Something went wrong"), data: undefined };
+        }
+    }
     async add(path, data) {
         try {
             const reference = this.db.doc(path);

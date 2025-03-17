@@ -4,6 +4,21 @@ import _ from "lodash";
 class Document {
   constructor(private db: FirebaseFirestore.Firestore) {}
 
+  async set(path: string, data: object): Promise<{ error: Error | null; data: object | null | undefined }> {
+    try {
+      const reference = this.db.doc(path);
+      const storedData = (await reference.get()).data();
+      if (!storedData) throw new Error("Document value is undefined.");
+      await reference.update(data);
+      return { error: null, data };
+    } catch (err) {
+      if (err instanceof Error) {
+        return { error: { name: err.name, message: err.message }, data: null };
+      }
+      return { error: new Error("Something went wrong"), data: undefined };
+    }
+  }
+
   async add(path: string, data: object): Promise<{ error: Error | null; data: object | null | undefined }> {
     try {
       const reference = this.db.doc(path);
@@ -40,11 +55,7 @@ class Document {
       return { error: new Error("Something went wrong"), data: undefined };
     }
   }
-  async addToArray(
-    path: string,
-    fieldName: string,
-    item: any
-  ): Promise<{ error: Error | null; data: object | null | undefined }> {
+  async addToArray(path: string, fieldName: string, item: any): Promise<{ error: Error | null; data: object | null | undefined }> {
     try {
       const reference = this.db.doc(path);
       const storedData = (await reference.get()).data();
@@ -66,11 +77,7 @@ class Document {
     }
   }
 
-  async removeFromArray(
-    path: string,
-    fieldName: string,
-    item: any
-  ): Promise<{ error: Error | null; data: object | null | undefined }> {
+  async removeFromArray(path: string, fieldName: string, item: any): Promise<{ error: Error | null; data: object | null | undefined }> {
     try {
       const reference = this.db.doc(path);
       const storedData = (await reference.get()).data();
