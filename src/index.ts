@@ -5,7 +5,7 @@ import Document from "./document";
 class EasyFirebase {
   readonly collection: Collection;
   readonly document: Document;
-  constructor(private readonly db: Firestore) {
+  constructor(public readonly db: Firestore) {
     this.collection = new Collection(this.db);
     this.document = new Document(this.db);
   }
