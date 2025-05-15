@@ -1,6 +1,10 @@
 declare class Collection {
     private db;
     constructor(db: FirebaseFirestore.Firestore);
+    getAll(path: string, orderBy: string): Promise<{
+        error: Error | null;
+        data: any[] | null | undefined;
+    }>;
     /**
      * Get documents data from a collection
      * @param path collection path Eg. users or data/1234/tasks
