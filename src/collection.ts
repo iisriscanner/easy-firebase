@@ -3,6 +3,31 @@ import _ from "lodash";
 class Collection {
   constructor(private db: FirebaseFirestore.Firestore) {}
 
+  async getAll(path: string, orderBy: string): Promise<{ error: Error | null; data: any[] | null | undefined }> {
+    try {
+      const reference = this.db.collection(path);
+      const testSnapshot = await reference.limit(1).get();
+      if (testSnapshot.empty) return { error: null, data: null };
+      const testDocumentData = orderBy in testSnapshot.docs[0].data();
+      if (!testDocumentData) throw new Error(`Invalid orderBy field, "${orderBy}" is not a valid key`);
+
+      let snapshot = await reference.orderBy(orderBy).get();
+
+      if (snapshot.empty) throw new Error("Collection does not exist or empty");
+      const data = snapshot.docs.map((doc) => {
+        const documentData = doc.data();
+        if (!("id" in documentData) || documentData.id === null) return { id: doc.id, ...doc.data() };
+        return doc.data();
+      });
+      return { error: null, data };
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return { error: { name: err.name, message: err.message }, data: null };
+      }
+      return { error: new Error("Something went wrong"), data: undefined };
+    }
+  }
+
   /**
    * Get documents data from a collection
    * @param path collection path Eg. users or data/1234/tasks
